@@ -23,14 +23,14 @@ class CRUDInterface:
         return inset_response
 
     @error_handler
-    def read(self, entity_id: str) -> Optional[List]:
+    def read(self, filter: dict[str]) -> Optional[List]:
         with MongoDBSessionManager() as db:
             collection = db.get_collection(self.collection_name)
-            document = list(collection.find({"_id": entity_id}))
+            document = list(collection.find(filter))
         return document
 
     @error_handler
-    def update(self, data: Dict[str, Any]):
+    def update_one(self, data: Dict[str, Any]):
         with MongoDBSessionManager() as db:
             collection = db.get_collection(self.collection_name)
             update_response = collection.replace_one({'_id': data['_id']}, data)
